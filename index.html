@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test glúteos · @laur.y</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F5EDE8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; padding: 2rem 1rem; }
+  #app { max-width: 600px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 2rem; }
+  .header .eyebrow { font-size: 13px; letter-spacing: 0.08em; color: #C97B84; font-weight: 600; margin-bottom: 0.5rem; }
+  .header h1 { font-size: 24px; font-weight: 600; color: #3D2B2E; line-height: 1.3; margin-bottom: 0.5rem; }
+  .header p { font-size: 14px; color: #7a5c60; }
+  .progress-bar { background: #EDD9D4; border-radius: 99px; height: 6px; margin-bottom: 2rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: #C97B84; border-radius: 99px; transition: width 0.4s ease; }
+  .question-card { background: #FFFFFF; border: 1px solid #e8c8c8; border-radius: 14px; padding: 1.75rem; margin-bottom: 1rem; box-shadow: 0 2px 12px rgba(201,123,132,0.08); }
+  .question-num { font-size: 11px; color: #C97B84; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .question-text { font-size: 16px; font-weight: 600; color: #3D2B2E; line-height: 1.5; margin-bottom: 1.25rem; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: center; gap: 12px; padding: 0.85rem 1rem; border: 1.5px solid #e8d5d5; border-radius: 10px; cursor: pointer; transition: all 0.15s; background: #fffafa; }
+  .option:hover { border-color: #E8B4B8; background: #fff5f5; }
+  .option.selected { border-color: #C97B84; background: #fdf0f1; }
+  .option-dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d4a0a5; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .option.selected .option-dot { border-color: #C97B84; background: #C97B84; }
+  .option.selected .option-dot::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: white; }
+  .option-label { font-size: 14px; color: #3D2B2E; line-height: 1.4; }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+  .btn { padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; border: 1.5px solid #d4a0a5; background: #FFFFFF; color: #3D2B2E; transition: all 0.15s; }
+  .btn:hover { background: #F5EDE8; }
+  .btn.primary { background: #C97B84; color: white; border-color: #C97B84; }
+  .btn.primary:hover { background: #b56970; border-color: #b56970; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .step-info { font-size: 13px; color: #7a5c60; }
+  #result { display: none; }
+  .result-header { text-align: center; padding: 1.5rem 0 1.25rem; }
+  .result-badge { display: inline-block; background: #fdf0f1; color: #C97B84; border: 1.5px solid #E8B4B8; border-radius: 99px; font-size: 12px; font-weight: 600; padding: 5px 16px; margin-bottom: 1rem; letter-spacing: 0.04em; }
+  .result-title { font-size: 21px; font-weight: 600; color: #3D2B2E; margin-bottom: 0.5rem; line-height: 1.3; }
+  .result-subtitle { font-size: 14px; color: #7a5c60; }
+  .result-main { background: #FFFFFF; border: 1px solid #e8c8c8; border-radius: 14px; padding: 1.5rem; margin: 1.25rem 0; box-shadow: 0 2px 12px rgba(201,123,132,0.08); }
+  .result-main h3 { font-size: 11px; color: #C97B84; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+  .result-main p { font-size: 14px; color: #3D2B2E; line-height: 1.7; }
+  .section-title { font-size: 11px; color: #7a5c60; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+  .tips-card { background: #FFFFFF; border: 1px solid #e8c8c8; border-radius: 14px; overflow: hidden; box-shadow: 0 2px 12px rgba(201,123,132,0.08); }
+  .tip { display: flex; gap: 12px; padding: 1rem 1.25rem; border-bottom: 1px solid #f5e5e5; }
+  .tip:last-child { border-bottom: none; }
+  .tip-icon { color: #C97B84; font-size: 17px; flex-shrink: 0; margin-top: 2px; }
+  .tip p { font-size: 14px; color: #3D2B2E; line-height: 1.55; }
+  .tip strong { font-weight: 600; color: #C97B84; }
+  .cta-card { background: #C97B84; border-radius: 14px; padding: 1.75rem; text-align: center; margin-top: 1.5rem; box-shadow: 0 4px 16px rgba(201,123,132,0.25); }
+  .cta-card .cta-title { color: white; font-size: 18px; font-weight: 600; margin-bottom: 0.5rem; }
+  .cta-card p { color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 1.25rem; line-height: 1.5; }
+  .cta-card a { display: inline-block; background: white; color: #C97B84; font-weight: 600; font-size: 14px; padding: 0.75rem 1.75rem; border-radius: 8px; text-decoration: none; transition: all 0.15s; }
+  .cta-card a:hover { background: #fdf5f6; transform: translateY(-1px); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="quiz">
+    <div class="header">
+      <div class="eyebrow">@laur.y</div>
+      <h1>Descubre por qué no te crece el glúteo</h1>
+      <p>10 preguntas. Resultado inmediato con tu problema principal y lo que puedes mejorar.</p>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:10%"></div></div>
+    <div class="question-card">
+      <div class="question-num" id="qnum">Pregunta 1 de 10</div>
+      <div class="question-text" id="qtext"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div class="nav">
+      <button class="btn" id="btnBack" onclick="goBack()" disabled>Atrás</button>
+      <span class="step-info" id="stepInfo"></span>
+      <button class="btn primary" id="btnNext" onclick="goNext()" disabled>Siguiente</button>
+    </div>
+  </div>
+  <div id="result">
+    <div class="result-header">
+      <div class="result-badge" id="rBadge"></div>
+      <div class="result-title" id="rTitle"></div>
+      <div class="result-subtitle" id="rSub"></div>
+    </div>
+    <div class="result-main">
+      <h3>Tu problema principal</h3>
+      <p id="rMain"></p>
+    </div>
+    <div class="section-title">Lo que puedes hacer desde ya</div>
+    <div class="tips-card" id="rTips"></div>
+    <div class="cta-card">
+      <div class="cta-title">¿Quieres que lo veamos juntas?</div>
+      <p>Podemos ver más a fondo qué está fallando y ayudarte sin ningún compromiso 🩷</p>
+      <a id="ctaLink" href="#" target="_blank">Háblame al whatsapp 🫶🏻</a>
+    </div>
+  </div>
+</div>
+<script>
+var questions = [
+  { text: "¿Cuántos días a la semana entrenas glúteos?", category: "volumen", options: [
+    { text: "1 día o ninguno", bad: true, feedback: "Si entrenas el glúteo un día o menos a la semana, el estímulo es insuficiente para que haya crecimiento. Con dos días bien trabajados ya notarías diferencia." },
+    { text: "2 días", bad: false, feedback: null },
+    { text: "3 días", bad: false, feedback: null },
+    { text: "4 días o más", bad: true, feedback: "Meter 4 días o más de glúteo suele ser contraproducente para la mayoría. Si no te da tiempo a recuperarte bien entre sesiones, el músculo no crece. Más no es mejor." }
+  ]},
+  { text: "¿Cuando terminas una serie de glúteos, cómo te sientes?", category: "intensidad", options: [
+    { text: "Podría seguir haciendo muchas más reps sin problema", bad: true, feedback: "Si terminas las series muy fresca, el estímulo no es suficiente para que el glúteo crezca. Necesitas llegar cerca del límite en cada serie para que el músculo tenga un motivo para crecer." },
+    { text: "Me queda energía pero noto que he trabajado", bad: true, feedback: "Vas por buen camino, pero puedes apretar un poco más. El glúteo necesita que lo lleves realmente cerca del límite para recibir el estímulo de crecimiento." },
+    { text: "Termino al límite, me cuesta sacar la última rep", bad: false, feedback: null },
+    { text: "Siempre llego al fallo muscular", bad: true, feedback: "Llegar al fallo total en todas las series genera demasiada fatiga y dificulta la recuperación. Lo ideal es quedarte a 1-2 repeticiones del fallo, no llegar siempre al límite absoluto." }
+  ]},
+  { text: "¿Sueles subir el peso, las repeticiones o mejorar la técnica cada semana?", category: "progresion", options: [
+    { text: "No, llevo meses haciendo lo mismo", bad: true, feedback: "Si llevas meses con el mismo peso y las mismas reps, tu cuerpo ya se ha adaptado y no tiene motivo para cambiar nada. Necesitas darle un reto nuevo cada semana, aunque sea pequeño." },
+    { text: "A veces, pero sin criterio claro", bad: true, feedback: "Progresar de forma aleatoria no es suficiente. Necesitas un criterio claro: por ejemplo, cuando puedas hacer el límite superior de tus reps con buen control, sube el peso." },
+    { text: "Intento subir algo cada semana", bad: false, feedback: null },
+    { text: "Sí, llevo un registro y progreso cada sesión", bad: false, feedback: null }
+  ]},
+  { text: "¿Cómo describes tu consumo de proteína al día?", category: "nutricion", options: [
+    { text: "Bajo, no le presto mucha atención", bad: true, feedback: "La proteína es necesaria para que el músculo se repare y crezca. Sin un mínimo de unos 1,2-1,5g por kilo de peso, el proceso de crecimiento no va a funcionar bien." },
+    { text: "Intento llegar a mucha proteína pero descuido el resto", bad: true, feedback: "Obsesionarse con la proteína y descuidar los carbohidratos es un error muy común. Los carbos son el combustible para rendir en el gym, y sin ellos el entrenamiento se resiente mucho." },
+    { text: "Como proteína suficiente y también carbohidratos", bad: false, feedback: null },
+    { text: "Tengo todo controlado y ajustado a mi objetivo", bad: false, feedback: null }
+  ]},
+  { text: "¿Comes suficientes carbohidratos para rendir en el entrenamiento?", category: "nutricion", options: [
+    { text: "No, los recorto mucho porque creo que engordan", bad: true, feedback: "Los carbohidratos no engordan por sí solos, y son básicos para rendir bien en el gym. Sin ellos llegas sin energía, las series son peores y el glúteo no recibe el estímulo que necesita." },
+    { text: "A veces, pero no lo tengo claro", bad: true, feedback: "La falta de carbohidratos de forma inconsistente hace que tu rendimiento en el gym sea irregular. Intenta tener siempre una fuente de carbohidratos antes del entrenamiento." },
+    { text: "Sí, como carbohidratos y me siento con energía", bad: false, feedback: null },
+    { text: "Sí y noto que rindo mucho mejor cuando los incluyo", bad: false, feedback: null }
+  ]},
+  { text: "¿Cuando haces tu día de glúteo, sientes que trabaja principalmente el glúteo?", category: "conexion", options: [
+    { text: "No, lo noto más en las piernas o la espalda", bad: true, feedback: "Si sientes el trabajo en otro sitio que no es el glúteo, el estímulo no está llegando donde tiene que llegar. Puede ser un problema de técnica o de activación previa." },
+    { text: "A veces sí, depende del día", bad: true, feedback: "La conexión con el glúteo debería ser consistente. Si un día lo sientes y otro no, suele ser porque no está activado antes de empezar o porque el peso es demasiado alto para controlar bien el movimiento." },
+    { text: "Generalmente sí, aunque no siempre", bad: false, feedback: null },
+    { text: "Sí, siento el glúteo claramente en cada rep", bad: false, feedback: null }
+  ]},
+  { text: "¿Haces algún tipo de activación de glúteo antes de entrenar?", category: "conexion", options: [
+    { text: "No, entro directamente a los ejercicios pesados", bad: true, feedback: "Entrar directamente a los ejercicios pesados sin activar el glúteo hace que otros músculos tomen el protagonismo. Con 5-10 minutos de activación el glúteo trabaja mucho mejor." },
+    { text: "A veces hago algo pero sin mucho criterio", bad: true, feedback: "La activación necesita ser consistente y con intención. Hacerla de vez en cuando no es suficiente para mejorar la conexión con el músculo." },
+    { text: "Sí, siempre caliento el glúteo antes", bad: false, feedback: null },
+    { text: "Sí y noto que mejora la conexión en el entrenamiento", bad: false, feedback: null }
+  ]},
+  { text: "¿Tienes en cuenta el descanso y el sueño como parte de tu progreso?", category: "recuperacion", options: [
+    { text: "No, no creo que influya tanto", bad: true, feedback: "El músculo no crece durante el entrenamiento, sino después, mientras descansas. Dormir mal o no descansar lo suficiente es frenar el progreso directamente." },
+    { text: "Sé que importa pero no lo cuido mucho", bad: true, feedback: "Saber que el descanso importa y no hacerle caso es perder una parte clave del proceso. Intenta priorizar el sueño igual que priorizas el entrenamiento." },
+    { text: "Intento dormir bien y tener días de descanso", bad: false, feedback: null },
+    { text: "Sí, gestiono el descanso tan en serio como el entrenamiento", bad: false, feedback: null }
+  ]},
+  { text: "¿Cuánto tiempo llevas entrenando glúteos de forma constante?", category: "contexto", options: [
+    { text: "Menos de 3 meses", bad: false, feedback: null },
+    { text: "Entre 3 y 6 meses", bad: false, feedback: null },
+    { text: "Entre 6 meses y 1 año", bad: false, feedback: null },
+    { text: "Más de 1 año", bad: false, feedback: null }
+  ]},
+  { text: "¿Cómo definirías tu relación con la comida en general?", category: "nutricion", options: [
+    { text: "Me restrinjo mucho, como muy poco", bad: true, feedback: "Comer demasiado poco es uno de los errores que más frena el crecimiento muscular. El cuerpo necesita un mínimo de calorías y nutrientes para poder construir músculo." },
+    { text: "Como bien pero sin estructura ni planificación", bad: true, feedback: "Sin un mínimo de estructura es difícil saber si estás comiendo lo que necesitas. No tiene que ser perfecto, pero tener una base te ayudaría mucho." },
+    { text: "Tengo bastante controlada la alimentación", bad: false, feedback: null },
+    { text: "Tengo una alimentación estructurada y sin obsesiones", bad: false, feedback: null }
+  ]}
+];
+var profiles = {
+  intensidad: { badge: "Problema principal: intensidad", title: "Entrenas, pero no con la intensidad suficiente", sub: "El volumen no es el problema. La intensidad sí.", main: "Puedes estar metiendo muchos días de glúteo, pero si terminas las series sin apenas esfuerzo, el músculo no tiene motivo para crecer. El glúteo necesita que lo lleves cerca de su límite para recibir el estímulo que activa el crecimiento. Cantidad sin calidad no funciona." },
+  progresion: { badge: "Problema principal: progresión", title: "Tu cuerpo se ha adaptado y ya no tiene retos nuevos", sub: "Hacer siempre lo mismo no da resultados nuevos.", main: "El músculo crece cuando tiene un motivo para hacerlo. Si llevas semanas o meses con el mismo peso, las mismas series y las mismas repeticiones, tu cuerpo ya está adaptado y no necesita cambiar nada. Progresar no es solo subir el peso: también es mejorar la técnica, añadir una rep o aumentar el rango de movimiento." },
+  nutricion: { badge: "Problema principal: nutrición", title: "Tu alimentación no está acompañando el entrenamiento", sub: "Sin el combustible correcto, el músculo no crece.", main: "Puedes entrenar perfecto, pero si tu alimentación no está bien ajustada, los resultados no llegan. El error más común ahora mismo es obsesionarse con la proteína y olvidar los carbohidratos, que son el combustible principal para rendir en el gym. Sin energía no hay intensidad, y sin intensidad no crecen los glúteos." },
+  conexion: { badge: "Problema principal: conexión mente-músculo", title: "El glúteo no está siendo el protagonista", sub: "Si no lo sientes, no lo estás trabajando bien.", main: "Puedes hacer todos los ejercicios correctos y aun así no trabajar el glúteo si quien está haciendo el esfuerzo es la espalda baja, los isquios o los cuádriceps. La conexión mente-músculo es clave: necesitas sentir el glúteo en cada repetición para que el estímulo llegue donde tiene que llegar." },
+  recuperacion: { badge: "Problema principal: recuperación", title: "El músculo crece cuando descansas, no cuando entrenas", sub: "El entrenamiento pone el estímulo. El descanso construye.", main: "Muchas chicas se centran solo en lo que pasa dentro del gym y olvidan que el crecimiento muscular ocurre fuera de él. Si no duermes bien, si tienes demasiado estrés o si no dejas tiempo suficiente entre sesiones de glúteo, el músculo no tiene la oportunidad de reconstruirse más fuerte." }
+};
+var tipIcons = { intensidad: "ti-flame", progresion: "ti-chart-line", nutricion: "ti-bread", conexion: "ti-activity", recuperacion: "ti-moon", volumen: "ti-calendar" };
+var catLabels = { intensidad: "Intensidad", progresion: "Progresión", nutricion: "Nutrición", conexion: "Conexión con el músculo", recuperacion: "Descanso y recuperación", volumen: "Volumen de entrenamiento" };
+var current = 0;
+var answers = new Array(10).fill(null);
+function render() {
+  var q = questions[current];
+  document.getElementById('qnum').textContent = 'Pregunta ' + (current+1) + ' de 10';
+  document.getElementById('qtext').textContent = q.text;
+  document.getElementById('stepInfo').textContent = (current+1) + ' / 10';
+  document.getElementById('progress').style.width = (((current+1)/10)*100) + '%';
+  var opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.options.forEach(function(opt, i) {
+    var div = document.createElement('div');
+    div.className = 'option' + (answers[current]===i?' selected':'');
+    div.innerHTML = '<div class="option-dot"></div><span class="option-label">'+opt.text+'</span>';
+    div.onclick = function(){ selectOption(i); };
+    opts.appendChild(div);
+  });
+  document.getElementById('btnBack').disabled = current===0;
+  document.getElementById('btnNext').disabled = answers[current]===null;
+  document.getElementById('btnNext').textContent = current===9?'Ver mi resultado':'Siguiente';
+}
+function selectOption(i) {
+  answers[current]=i;
+  document.querySelectorAll('.option').forEach(function(el,idx){ el.className='option'+(idx===i?' selected':''); });
+  document.getElementById('btnNext').disabled=false;
+}
+function goNext() { if(answers[current]===null)return; if(current===9){showResult();return;} current++; render(); }
+function goBack() { if(current===0)return; current--; render(); }
+function buildWhatsappLink(principal, fallos) {
+  var msg = 'Hola Laury!! Acabo de hacer tu test y mi problema principal es: '+principal+'.';
+  if(fallos.length>0) msg+=' También me falla: '+fallos.join(', ')+'.';
+  msg+=' Me gustaría que me ayudaras más a fondo! ☺️🩷';
+  return 'https://wa.me/34963708632?text='+encodeURIComponent(msg);
+}
+function showResult() {
+  var catScores={intensidad:0,progresion:0,nutricion:0,conexion:0,recuperacion:0};
+  var catWeights=[
+    {cat:'volumen',w:[3,0,0,2]},{cat:'intensidad',w:[3,2,0,2]},{cat:'progresion',w:[3,2,0,0]},
+    {cat:'nutricion',w:[2,3,0,0]},{cat:'nutricion',w:[3,2,0,0]},{cat:'conexion',w:[3,2,0,0]},
+    {cat:'conexion',w:[3,2,0,0]},{cat:'recuperacion',w:[3,2,0,0]},{cat:'contexto',w:[0,0,0,0]},{cat:'nutricion',w:[3,2,0,0]}
+  ];
+  catWeights.forEach(function(m,i){ if(answers[i]!==null&&catScores[m.cat]!==undefined) catScores[m.cat]+=m.w[answers[i]]; });
+  var top=Object.entries(catScores).sort(function(a,b){return b[1]-a[1];})[0][0];
+  var p=profiles[top];
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').style.display='block';
+  document.getElementById('rBadge').textContent=p.badge;
+  document.getElementById('rTitle').textContent=p.title;
+  document.getElementById('rSub').textContent=p.sub;
+  document.getElementById('rMain').textContent=p.main;
+  var seen={}, shown=[];
+  questions.forEach(function(q,i){ var c=answers[i]; if(c!==null&&q.options[c].bad&&q.category!=='contexto'&&!seen[q.category]){seen[q.category]=true;shown.push({cat:q.category,feedback:q.options[c].feedback});} });
+  var tipsEl=document.getElementById('rTips');
+  tipsEl.innerHTML='';
+  if(shown.length===0){ tipsEl.innerHTML='<div class="tip"><p>Vas por muy buen camino. Sigue con constancia y los resultados llegarán.</p></div>'; }
+  else { shown.forEach(function(b){ var icon=tipIcons[b.cat]||'ti-info-circle'; var label=catLabels[b.cat]||b.cat; tipsEl.innerHTML+='<div class="tip"><i class="ti '+icon+' tip-icon"></i><p><strong>'+label+':</strong> '+b.feedback+'</p></div>'; }); }
+  var principal=catLabels[top]||top;
+  var fallos=shown.filter(function(b){return b.cat!==top;}).map(function(b){return catLabels[b.cat]||b.cat;});
+  document.getElementById('ctaLink').href=buildWhatsappLink(principal,fallos);
+}
+render();
+</script>
+</body>
+</html>
